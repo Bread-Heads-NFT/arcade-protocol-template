@@ -31,6 +31,7 @@ export class Preloader extends Scene {
         this.load.image('sky', 'sky.png');
         this.load.image('ground', 'platform.png');
         this.load.image('star', 'star.png');
+        this.load.image('crypto_coin', 'star.png'); // Using star.png as a placeholder for crypto coin
         // Load the spritesheet for the player.
         this.load.spritesheet('dude', 'dude.png', {
             frameWidth: 32,

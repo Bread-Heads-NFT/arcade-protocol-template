@@ -6,6 +6,7 @@ import { Preloader } from '@/scenes/Preloader';
 import { WalletConnect } from '@/scenes/WalletConnect';
 import { MainMenu } from '@/scenes/MainMenu';
 import { Game as MainGame } from '@/scenes/Game';
+import { CryptoClicker } from '@/scenes/CryptoClicker';
 import { useUmi } from '@/providers/useUmi';
 import EventCenter from '@/events/eventCenter';
 import { useWallet } from '@solana/wallet-adapter-react';
@@ -39,6 +40,7 @@ const Game = () => {
                 WalletConnect,
                 MainMenu,
                 MainGame,
+                CryptoClicker,
             ],
             render: {
                 pixelArt: true,

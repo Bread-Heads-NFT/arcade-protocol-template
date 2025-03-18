@@ -34,16 +34,46 @@ export class MainMenu extends Scene {
             align: 'center'
         }).setOrigin(0.5);
 
-        this.title = this.add.text(DEFAULT_WIDTH / 2, DEFAULT_HEIGHT * 0.7, 'Start Game', {
+        // Create button for the original game
+        const gameButton = this.add.text(DEFAULT_WIDTH / 2, DEFAULT_HEIGHT * 0.65, 'Start Game', {
             fontFamily: 'Arial Black', fontSize: 38, color: '#ffffff',
             stroke: '#000000', strokeThickness: 8,
             align: 'center'
-        }).setOrigin(0.5);
+        }).setOrigin(0.5)
+            .setInteractive({ useHandCursor: true });
 
-        this.input.once('pointerdown', () => {
+        // Create button for the CryptoClicker game
+        const cryptoClickerButton = this.add.text(DEFAULT_WIDTH / 2, DEFAULT_HEIGHT * 0.8, 'Crypto Clicker', {
+            fontFamily: 'Arial Black', fontSize: 38, color: '#FFD700',
+            stroke: '#000000', strokeThickness: 8,
+            align: 'center'
+        }).setOrigin(0.5)
+            .setInteractive({ useHandCursor: true });
 
+        // Add hover effects for both buttons
+        gameButton.on('pointerover', () => {
+            gameButton.setStyle({ color: '#ff0' });
+        });
+
+        gameButton.on('pointerout', () => {
+            gameButton.setStyle({ color: '#ffffff' });
+        });
+
+        cryptoClickerButton.on('pointerover', () => {
+            cryptoClickerButton.setStyle({ color: '#ff0' });
+        });
+
+        cryptoClickerButton.on('pointerout', () => {
+            cryptoClickerButton.setStyle({ color: '#FFD700' });
+        });
+
+        // Add click handlers for both buttons
+        gameButton.on('pointerdown', () => {
             this.scene.start('Game', { umi: this.umi });
+        });
 
+        cryptoClickerButton.on('pointerdown', () => {
+            this.scene.start('CryptoClicker', { umi: this.umi });
         });
     }
 }
