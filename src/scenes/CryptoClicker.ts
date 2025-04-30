@@ -827,6 +827,12 @@ export class CryptoClicker extends Scene {
                 tokenMint: publicKey(tokenMint),
                 gameId: 0
             }).sendAndConfirm(this.umi);
+        } else if (arcade && tokenMint) {
+            await recordGuestPlay(this.umi, {
+                arcade: publicKey(arcade),
+                tokenMint: publicKey(tokenMint),
+                gameId: 0
+            }).sendAndConfirm(this.umi);
         }
     }
 } 
