@@ -1,6 +1,8 @@
 import { Scene } from 'phaser';
 import { DEFAULT_WIDTH, DEFAULT_HEIGHT } from '@/components/Game';
-import { Umi } from '@metaplex-foundation/umi';
+import { Context, publicKey, Umi } from '@metaplex-foundation/umi';
+import { recordPlay, recordGuestPlay } from '@breadheads/bgl-insert-coin';
+import { findAssetSignerPda } from '@metaplex-foundation/mpl-core';
 
 interface Achievement {
     id: string;
@@ -12,7 +14,9 @@ interface Achievement {
 }
 
 export class CryptoClicker extends Scene {
-    private umi!: Umi;
+    private umi!: Pick<Context, 'eddsa' | 'identity' | 'payer' | 'programs' | 'rpc' | 'transactions'>;
+    private playerAsset!: string | null;
+    private referrer!: string | null;
     private coin!: Phaser.GameObjects.Image;
     private clickText!: Phaser.GameObjects.Text;
     private cryptoCount: number = 0;
@@ -64,8 +68,10 @@ export class CryptoClicker extends Scene {
         super('CryptoClicker');
     }
 
-    init(args: { umi: Umi }) {
-        this.umi = args.umi;
+    init(args: { umi: Umi, playerAsset: string | null, referrer: string | null }) {
+        this.umi = args.umi as Pick<Context, "eddsa" | "identity" | "payer" | "programs" | "rpc" | "transactions">;
+        this.playerAsset = args.playerAsset;
+        this.referrer = args.referrer;
     }
 
     preload() {
@@ -73,6 +79,12 @@ export class CryptoClicker extends Scene {
     }
 
     create() {
+        // Record the play.
+        this.recordPlay().then(() => {
+            console.log('Play recorded');
+        }).catch((error) => {
+            console.error('Error recording play', error);
+        });
         // Create a custom crypto-themed background
         this.createCryptoBackground();
 
@@ -794,6 +806,27 @@ export class CryptoClicker extends Scene {
 
             // Check for achievements
             this.checkAchievements();
+        }
+    }
+
+    async recordPlay() {
+        const arcade = process.env.NEXT_PUBLIC_COLLECTION_ID;
+        const tokenMint = process.env.NEXT_PUBLIC_TOKEN_MINT;
+        if (this.playerAsset && arcade && tokenMint) {
+            await recordPlay(this.umi, {
+                player: publicKey(this.playerAsset),
+                arcade: publicKey(arcade),
+                tokenMint: publicKey(tokenMint),
+                gameId: 0
+            }).sendAndConfirm(this.umi);
+        } else if (this.referrer && arcade && tokenMint) {
+            await recordGuestPlay(this.umi, {
+                referrer: publicKey(this.referrer),
+                referrerSigner: findAssetSignerPda(this.umi, { asset: publicKey(this.referrer) }),
+                arcade: publicKey(arcade),
+                tokenMint: publicKey(tokenMint),
+                gameId: 0
+            }).sendAndConfirm(this.umi);
         }
     }
 } 

@@ -7,29 +7,25 @@ import { TipLinkWalletAdapter } from "@tiplink/wallet-adapter";
 import { TipLinkModalTheme, TipLinkWalletModalProvider, WalletDisconnectButton, WalletMultiButton } from "@tiplink/wallet-adapter-react-ui";
 import dynamic from "next/dynamic";
 import { useMemo } from "react";
+import { useSearchParams } from 'next/navigation';
 
 const Game = dynamic(() => import('@/components/Game'), { ssr: false });
 
 require('@tiplink/wallet-adapter-react-ui/styles.css');
 
 export default function Home() {
-  // The network can be set to 'devnet', 'testnet', or 'mainnet-beta'.
-  const network = WalletAdapterNetwork.Devnet;
-
   // You can also provide a custom RPC endpoint.
-  const endpoint = useMemo(() => clusterApiUrl(network), [network]);
-
   const adapter = useMemo(() => new TipLinkWalletAdapter({
-    title: "Solana Phaser Template",
+    title: "Crypto Clicker",
     clientId: "694bf97c-d2ac-4dfc-a786-a001812658df",
     theme: 'dark'
   }), []);
 
   return (
     <main>
-      < ConnectionProvider endpoint={endpoint} >
+      < ConnectionProvider endpoint={process.env.NEXT_PUBLIC_SOLANA_RPC_ENDPOINT || "https://api.devnet.solana.com"} >
         <WalletProvider wallets={[adapter]} autoConnect>
-          <TipLinkWalletModalProvider title="Hello Phaser" logoSrc="/assets/logo.png" theme={TipLinkModalTheme.DARK}>
+          <TipLinkWalletModalProvider title="Crypto Clicker" logoSrc="/assets/logo.png" theme={TipLinkModalTheme.DARK}>
             <UmiProvider>
               <div className="p-5 w-full">
                 <WalletMultiButton className="ml-auto" />
