@@ -812,10 +812,12 @@ export class CryptoClicker extends Scene {
     async recordPlay() {
         const arcade = process.env.NEXT_PUBLIC_COLLECTION_ID;
         const tokenMint = process.env.NEXT_PUBLIC_TOKEN_MINT;
+        const authority = process.env.NEXT_PUBLIC_ARCADE_AUTHORITY!;
         if (this.playerAsset && arcade && tokenMint) {
             await recordPlay(this.umi, {
                 player: publicKey(this.playerAsset),
                 arcade: publicKey(arcade),
+                authority: publicKey(authority),
                 tokenMint: publicKey(tokenMint),
                 gameId: 0
             }).sendAndConfirm(this.umi);
@@ -824,12 +826,14 @@ export class CryptoClicker extends Scene {
                 referrer: publicKey(this.referrer),
                 referrerSigner: findAssetSignerPda(this.umi, { asset: publicKey(this.referrer) }),
                 arcade: publicKey(arcade),
+                authority: publicKey(authority),
                 tokenMint: publicKey(tokenMint),
                 gameId: 0
             }).sendAndConfirm(this.umi);
         } else if (arcade && tokenMint) {
             await recordGuestPlay(this.umi, {
                 arcade: publicKey(arcade),
+                authority: publicKey(authority),
                 tokenMint: publicKey(tokenMint),
                 gameId: 0
             }).sendAndConfirm(this.umi);
