@@ -1,8 +1,7 @@
 import { Scene } from 'phaser';
 import { DEFAULT_WIDTH, DEFAULT_HEIGHT } from '@/components/Game';
-import { Context, publicKey, Umi } from '@metaplex-foundation/umi';
-import { recordPlay, recordGuestPlay } from '@breadheads/bgl-insert-coin';
-import { findAssetSignerPda } from '@metaplex-foundation/mpl-core';
+import { Context, Umi } from '@metaplex-foundation/umi';
+import { recordPlayUtil } from '@/utils/recordPlay';
 
 interface Achievement {
     id: string;
@@ -80,9 +79,9 @@ export class CryptoClicker extends Scene {
 
     create() {
         // Record the play.
-        this.recordPlay().then(() => {
+        recordPlayUtil(this.umi, this.playerAsset!, this.referrer!).then(() => {
             console.log('Play recorded');
-        }).catch((error) => {
+        }).catch((error: any) => {
             console.error('Error recording play', error);
         });
         // Create a custom crypto-themed background
@@ -795,35 +794,4 @@ export class CryptoClicker extends Scene {
             this.checkAchievements();
         }
     }
-
-    async recordPlay() {
-        const arcade = process.env.NEXT_PUBLIC_COLLECTION_ID;
-        const tokenMint = process.env.NEXT_PUBLIC_TOKEN_MINT;
-        const authority = process.env.NEXT_PUBLIC_ARCADE_AUTHORITY!;
-        if (this.playerAsset && arcade && tokenMint) {
-            await recordPlay(this.umi, {
-                player: publicKey(this.playerAsset),
-                arcade: publicKey(arcade),
-                authority: publicKey(authority),
-                tokenMint: publicKey(tokenMint),
-                gameId: 0
-            }).sendAndConfirm(this.umi);
-        } else if (this.referrer && arcade && tokenMint) {
-            await recordGuestPlay(this.umi, {
-                referrer: publicKey(this.referrer),
-                referrerSigner: findAssetSignerPda(this.umi, { asset: publicKey(this.referrer) }),
-                arcade: publicKey(arcade),
-                authority: publicKey(authority),
-                tokenMint: publicKey(tokenMint),
-                gameId: 0
-            }).sendAndConfirm(this.umi);
-        } else if (arcade && tokenMint) {
-            await recordGuestPlay(this.umi, {
-                arcade: publicKey(arcade),
-                authority: publicKey(authority),
-                tokenMint: publicKey(tokenMint),
-                gameId: 0
-            }).sendAndConfirm(this.umi);
-        }
-    }
-} 
+}

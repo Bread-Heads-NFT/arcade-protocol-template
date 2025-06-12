@@ -1,0 +1,39 @@
+
+import { recordPlay, recordGuestPlay } from '@breadheads/bgl-insert-coin';
+import { findAssetSignerPda } from '@metaplex-foundation/mpl-core';
+import { Context, publicKey } from '@metaplex-foundation/umi';
+
+export async function recordPlayUtil(
+    umi: Pick<Context, 'eddsa' | 'identity' | 'payer' | 'programs' | 'rpc' | 'transactions'>,
+    playerAsset: string,
+    referrer: string
+): Promise<void> {
+    const arcade = process.env.NEXT_PUBLIC_COLLECTION_ID;
+    const tokenMint = process.env.NEXT_PUBLIC_TOKEN_MINT;
+    const authority = process.env.NEXT_PUBLIC_ARCADE_AUTHORITY!;
+    if (playerAsset && arcade && tokenMint) {
+        await recordPlay(umi, {
+            player: publicKey(playerAsset),
+            arcade: publicKey(arcade),
+            authority: publicKey(authority),
+            tokenMint: publicKey(tokenMint),
+            gameId: 0
+        }).sendAndConfirm(umi);
+    } else if (referrer && arcade && tokenMint) {
+        await recordGuestPlay(umi, {
+            referrer: publicKey(referrer),
+            referrerSigner: findAssetSignerPda(umi, { asset: publicKey(referrer) }),
+            arcade: publicKey(arcade),
+            authority: publicKey(authority),
+            tokenMint: publicKey(tokenMint),
+            gameId: 0
+        }).sendAndConfirm(umi);
+    } else if (arcade && tokenMint) {
+        await recordGuestPlay(umi, {
+            arcade: publicKey(arcade),
+            authority: publicKey(authority),
+            tokenMint: publicKey(tokenMint),
+            gameId: 0
+        }).sendAndConfirm(umi);
+    }
+}
