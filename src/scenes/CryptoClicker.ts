@@ -157,19 +157,6 @@ export class CryptoClicker extends Scene {
             loop: true
         });
 
-        // Add a back button to return to the main menu
-        const backButton = this.add.text(100, 50, 'Back', {
-            fontFamily: 'Arial',
-            fontSize: 20,
-            color: '#FFFFFF',
-            stroke: '#000000',
-            strokeThickness: 3
-        }).setOrigin(0.5)
-            .setInteractive({ useHandCursor: true })
-            .on('pointerover', () => backButton.setStyle({ color: '#FFD700' }))
-            .on('pointerout', () => backButton.setStyle({ color: '#FFFFFF' }))
-            .on('pointerdown', () => this.scene.start('MainMenu', { umi: this.umi }));
-
         // Add save/load buttons
         this.createSaveLoadButtons();
 
