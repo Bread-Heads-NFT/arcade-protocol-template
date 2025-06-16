@@ -5,8 +5,8 @@ import "./globals.css";
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
-  title: "Solana Phaser Template",
-  description: "A template for building Phaser games on Solana, written by Bread Heads Studios",
+  title: "Crumb Catcher - Solana Flappy Bird Clone",
+  description: "A Solana-powered Flappy Bird clone where you catch crumbs instead of dodging pipes. Built with Phaser and Next.js, featuring wallet integration and NFT support by Bread Heads Studios.",
 };
 
 export default function RootLayout({
