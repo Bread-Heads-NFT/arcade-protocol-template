@@ -101,7 +101,7 @@ export class WalletConnect extends Scene {
 
     update() {
         if (this.umi && this.playerAsset !== undefined) {
-            this.scene.start('CryptoClicker', { umi: this.umi, playerAsset: this.playerAsset, referrer: this.referrer });
+            this.scene.start('FlappyBird', { umi: this.umi, playerAsset: this.playerAsset, referrer: this.referrer });
         }
     }
 }

@@ -1,12 +1,15 @@
-
 import { recordPlay, recordGuestPlay } from '@breadheads/bgl-insert-coin';
 import { findAssetSignerPda } from '@metaplex-foundation/mpl-core';
 import { Context, publicKey } from '@metaplex-foundation/umi';
 
+// Utility function to record a play session, e.g., for analytics or rewards
+// Import Context type from Metaplex UMI for blockchain-related features
+
+// Export a function to record a play session
 export async function recordPlayUtil(
     umi: Pick<Context, 'eddsa' | 'identity' | 'payer' | 'programs' | 'rpc' | 'transactions'>,
-    playerAsset: string,
-    referrer: string
+    playerAsset: string | null,
+    referrer: string | null
 ): Promise<void> {
     const arcade = process.env.NEXT_PUBLIC_COLLECTION_ID;
     const tokenMint = process.env.NEXT_PUBLIC_TOKEN_MINT;

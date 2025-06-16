@@ -6,21 +6,20 @@ import { Preloader } from '@/scenes/Preloader';
 import { WalletConnect } from '@/scenes/WalletConnect';
 import { MainMenu } from '@/scenes/MainMenu';
 import { Game as MainGame } from '@/scenes/Game';
-import { CryptoClicker } from '@/scenes/CryptoClicker';
+import { FlappyBird } from '@/scenes/FlappyBird';
 import { useUmi } from '@/providers/useUmi';
 import EventCenter from '@/events/eventCenter';
 import { useWallet } from '@solana/wallet-adapter-react';
 import { useSearchParams } from 'next/navigation';
 
-export const DEFAULT_WIDTH: number = 800;
-export const DEFAULT_HEIGHT: number = 600;
+export const DEFAULT_WIDTH: number = 512;
+export const DEFAULT_HEIGHT: number = 512;
 
 const Game = () => {
     const wallet = useWallet();
     const umi = useUmi();
     const searchParams = useSearchParams();
     const [ready, setReady] = useState(false);
-
 
     const playerAsset = searchParams.get('nft');
     console.log("playerAsset", playerAsset);
@@ -51,7 +50,7 @@ const Game = () => {
                 WalletConnect,
                 MainMenu,
                 MainGame,
-                CryptoClicker,
+                FlappyBird,
             ],
             render: {
                 pixelArt: true,
@@ -64,11 +63,10 @@ const Game = () => {
             physics: {
                 default: 'arcade',
                 arcade: {
-                    gravity: { x: 0, y: 800 },
-                    debug: false
+                    gravity: { x: 0, y: 0 },
+                    debug: false,
                 }
             },
-
         };
         const game = new Phaser.Game(config)
         return () => {
@@ -77,10 +75,8 @@ const Game = () => {
     }, [])
     return (
         <div>
-
         </div>
     )
 }
-
 
 export default Game;

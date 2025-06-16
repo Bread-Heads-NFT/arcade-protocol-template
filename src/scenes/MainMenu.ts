@@ -2,6 +2,7 @@ import { DEFAULT_HEIGHT, DEFAULT_WIDTH } from '@/components/Game';
 import { Umi } from '@metaplex-foundation/umi';
 import { Scene, GameObjects } from 'phaser';
 
+// Define the MainMenu scene, which displays the main menu UI
 export class MainMenu extends Scene {
     private umi!: Umi;
     background!: GameObjects.Image;
@@ -10,13 +11,14 @@ export class MainMenu extends Scene {
     welcome!: GameObjects.Text;
 
     constructor() {
-        super('MainMenu');
+        super('MainMenu'); // Set the scene key
     }
 
     init(args: { umi: Umi }) {
         this.umi = args.umi;
     }
 
+    // Create method sets up the main menu UI
     create() {
         this.background = this.add.image(DEFAULT_WIDTH / 2, DEFAULT_HEIGHT / 2, 'background').setSize(DEFAULT_WIDTH, DEFAULT_HEIGHT);
 
@@ -73,7 +75,7 @@ export class MainMenu extends Scene {
         });
 
         cryptoClickerButton.on('pointerdown', () => {
-            this.scene.start('CryptoClicker', { umi: this.umi });
+            this.scene.start('FlappyBird', { umi: this.umi });
         });
     }
 }
