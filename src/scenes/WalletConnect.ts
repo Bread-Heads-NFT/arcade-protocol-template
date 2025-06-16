@@ -28,75 +28,59 @@ export class WalletConnect extends Scene {
         });
     }
 
-    createCryptoBackground() {
-        // Create a dark gradient background
-        const bg = this.add.graphics();
-        bg.fillGradientStyle(0x0a0a2a, 0x0a0a2a, 0x000000, 0x000000, 1);
-        bg.fillRect(0, 0, DEFAULT_WIDTH, DEFAULT_HEIGHT);
-
-        // Add some "blockchain" elements
-        for (let i = 0; i < 10; i++) {
-            const x = Phaser.Math.Between(50, DEFAULT_WIDTH - 50);
-            const y = Phaser.Math.Between(50, DEFAULT_HEIGHT - 50);
-            const size = Phaser.Math.Between(30, 80);
-
-            // Create a block
-            const block = this.add.graphics();
-            block.lineStyle(1, 0x3498db, 0.3);
-            block.strokeRect(x, y, size, size);
-
-            // Add some "data" inside the block
-            for (let j = 0; j < 3; j++) {
-                const lineY = y + 10 + (j * 10);
-                const lineWidth = Phaser.Math.Between(size * 0.5, size * 0.8);
-                block.lineStyle(2, 0x3498db, 0.2);
-                block.lineBetween(x + 5, lineY, x + lineWidth, lineY);
-            }
-        }
-
-        // Add some floating particles
-        for (let i = 0; i < 50; i++) {
-            const x = Phaser.Math.Between(0, DEFAULT_WIDTH);
-            const y = Phaser.Math.Between(0, DEFAULT_HEIGHT);
-            const particle = this.add.circle(x, y, 1, 0xFFD700, 0.3);
-
-            // Animate the particles
-            this.tweens.add({
-                targets: particle,
-                y: particle.y - Phaser.Math.Between(50, 150),
-                alpha: 0,
-                duration: Phaser.Math.Between(3000, 8000),
-                repeat: -1,
-                delay: Phaser.Math.Between(0, 2000)
-            });
-        }
-
-        // Add some "connection lines" between random points
-        const connectionLines = this.add.graphics();
-        connectionLines.lineStyle(1, 0x3498db, 0.2);
-
-        for (let i = 0; i < 15; i++) {
-            const x1 = Phaser.Math.Between(0, DEFAULT_WIDTH);
-            const y1 = Phaser.Math.Between(0, DEFAULT_HEIGHT);
-            const x2 = Phaser.Math.Between(0, DEFAULT_WIDTH);
-            const y2 = Phaser.Math.Between(0, DEFAULT_HEIGHT);
-
-            connectionLines.lineBetween(x1, y1, x2, y2);
-        }
-    }
-
     create() {
-        // Create the crypto-themed background
-        this.createCryptoBackground();
+        // Create the bird's flapping animation
+        this.anims.create({
+            key: 'flap',
+            frames: this.anims.generateFrameNumbers('bird', { start: 0, end: 3 }),
+            frameRate: 4,
+            repeat: -1,
+        })
 
+        // Add the game background image (bg.png)
+        this.add.image(DEFAULT_WIDTH / 2, DEFAULT_HEIGHT / 2, 'background').setDisplaySize(DEFAULT_WIDTH, DEFAULT_HEIGHT);
+
+        // Add the flapping bird near the prompt
+        const birdY = DEFAULT_HEIGHT / 6 + 60;
+        let bird;
+        bird = this.add.sprite(DEFAULT_WIDTH / 2, birdY, 'bird').setScale(2);
+        bird.play('flap');
+        // Simple up/down tween
+        this.tweens.add({
+            targets: bird,
+            y: birdY + 10,
+            duration: 500,
+            yoyo: true,
+            repeat: -1,
+            ease: 'Sine.easeInOut'
+        });
+
+        // Add the wallet connect prompt
         this.add
             .text(
                 DEFAULT_WIDTH / 2,
                 DEFAULT_HEIGHT / 6,
                 `Connect your wallet to play.`,
-                { fontSize: "30px", fontFamily: "futura", color: "#FFD700", align: "center" }
+                { fontSize: "30px", fontFamily: "futura", color: "#FFD700", align: "center", stroke: "#000", strokeThickness: 6 }
             )
             .setOrigin(0.5);
+
+        // Raining crumbs effect
+        this.time.addEvent({
+            delay: 200, // spawn a crumb every 200ms
+            callback: () => {
+                const x = Phaser.Math.Between(20, DEFAULT_WIDTH - 20);
+                const crumb = this.add.sprite(x, -10, 'crumb').setScale(0.5 + Math.random() * 0.5);
+                this.tweens.add({
+                    targets: crumb,
+                    y: DEFAULT_HEIGHT + 20,
+                    alpha: 0,
+                    duration: Phaser.Math.Between(1200, 2200),
+                    onComplete: () => crumb.destroy()
+                });
+            },
+            loop: true
+        });
     }
 
     update() {

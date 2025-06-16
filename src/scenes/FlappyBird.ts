@@ -64,6 +64,7 @@ export class FlappyBird extends Scene {
         this.background = this.add.tileSprite(0, 0, DEFAULT_WIDTH, DEFAULT_HEIGHT, 'background').setOrigin(0, 0).setScale(2);
 
         // Create the bird's flapping animation
+        this.anims.remove('flap');
         this.anims.create({
             key: 'flap',
             frames: this.anims.generateFrameNumbers('bird', { start: 0, end: 3 }),
