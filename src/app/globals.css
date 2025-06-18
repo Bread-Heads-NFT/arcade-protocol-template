@@ -31,3 +31,15 @@ body {
     text-wrap: balance;
   }
 }
+
+/* Pixel art button styles */
+.pixel-font {
+  font-smooth: never;
+  -webkit-font-smoothing: none;
+}
+
+/* Disable font smoothing for pixel-perfect rendering */
+* {
+  image-rendering: pixelated;
+  image-rendering: crisp-edges;
+}

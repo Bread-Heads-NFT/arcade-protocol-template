@@ -11,13 +11,13 @@ const DEFAULT_CONTEXT: UmiContext = {
 
 export const UmiContext = createContext<UmiContext>(DEFAULT_CONTEXT);
 
-export function useUmi(): Umi {
+export function useUmi(): Umi | null {
     const { umi } = useContext(UmiContext);
-    if (!umi) {
-        throw new Error(
-            'Umi context was not initialized. ' +
-            'Did you forget to wrap your app with <UmiProvider />?'
-        );
-    }
+    // if (!umi) {
+    //     throw new Error(
+    //         'Umi context was not initialized. ' +
+    //         'Did you forget to wrap your app with <UmiProvider />?'
+    //     );
+    // }
     return umi;
 }

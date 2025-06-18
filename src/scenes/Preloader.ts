@@ -37,6 +37,8 @@ export class Preloader extends Scene {
         this.load.audio('crumb-catch', 'assets/pickup.ogg');
         // Load game over sound effect
         this.load.audio('gameover', 'assets/gameover.ogg');
+        // Load a message for if the user doesn't pay
+        this.load.image('sad', 'assets/sad.png');
     }
 
     // Create method is called after preload completes

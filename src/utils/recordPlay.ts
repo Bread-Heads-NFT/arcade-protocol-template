@@ -14,6 +14,7 @@ export async function recordPlayUtil(
     const arcade = process.env.NEXT_PUBLIC_COLLECTION_ID;
     const tokenMint = process.env.NEXT_PUBLIC_TOKEN_MINT;
     const authority = process.env.NEXT_PUBLIC_ARCADE_AUTHORITY!;
+    console.log("Umi:", umi.identity)
     if (playerAsset && arcade && tokenMint) {
         await recordPlay(umi, {
             player: publicKey(playerAsset),

@@ -6,6 +6,7 @@ import { DEFAULT_WIDTH, DEFAULT_HEIGHT } from '@/components/Game';
 import { Context } from '@metaplex-foundation/umi';
 // Import utility function to record play sessions (e.g., for rewards or analytics)
 import { recordPlayUtil } from '@/utils/recordPlay';
+import { WalletSignTransactionError } from '@solana/wallet-adapter-base';
 
 // Define the FlappyBird scene, which extends Phaser's Scene class
 export class FlappyBird extends Scene {
@@ -24,6 +25,7 @@ export class FlappyBird extends Scene {
     private restartButton!: Phaser.GameObjects.Text; // Button to restart the game
     private startText!: Phaser.GameObjects.Text; // Instructions to start the game
     private background!: Phaser.GameObjects.TileSprite; // Scrolling background image
+    private sadImage!: Phaser.GameObjects.Image; // Sad image for payment error
 
     // Game state variables
     private score: number = 0; // Current player score
@@ -56,9 +58,19 @@ export class FlappyBird extends Scene {
         // Record the play.
         recordPlayUtil(this.umi, this.playerAsset!, this.referrer!).then(() => {
             console.log('Play recorded');
-        }).catch((error: any) => {
-            console.error('Error recording play', error);
-        });
+        })
+            .catch((error: WalletSignTransactionError) => {
+                console.error('Wallet sign transaction error', error);
+                console.error(JSON.stringify(error, null, 2));
+                console.error("User didn't pay");
+                // Display sad image in the center of the screen
+                this.sadImage = this.add.image(DEFAULT_WIDTH * 0.5, DEFAULT_HEIGHT * 0.5, 'sad')
+                    .setOrigin(0.5)
+                    .setScale(1); // Scale up the image for better visibility
+            })
+            .catch((error: any) => {
+                console.error('Error recording play', error);
+            });
 
         // Add a moving background using a tile sprite
         this.background = this.add.tileSprite(0, 0, DEFAULT_WIDTH, DEFAULT_HEIGHT, 'background').setOrigin(0, 0).setScale(2);
